@@ -26,9 +26,9 @@ export default function RegisterScreen() {
     <AuthScreen title="Create an account" subtitle="Start a household net worth dashboard.">
       <View style={authStyles.form}>
         <View><Text style={authStyles.label}>Email</Text><TextInput autoCapitalize="none" autoComplete="email" keyboardType="email-address" style={authStyles.input} value={email} onChangeText={setEmail} /></View>
-        <View><Text style={authStyles.label}>Household name</Text><TextInput autoComplete="organization" style={authStyles.input} value={householdName} onChangeText={setHouseholdName} /></View>
-        <View><Text style={authStyles.label}>Password</Text><PasswordInput autoCapitalize="none" autoComplete="new-password" value={password} onChangeText={setPassword} /></View>
-        <Text style={authStyles.help}>At least 8 characters with a letter, number, and special character.</Text>
+        <View><Text style={authStyles.label}>Household name</Text><TextInput autoComplete="organization" maxLength={255} style={authStyles.input} value={householdName} onChangeText={setHouseholdName} /></View>
+        <View><Text style={authStyles.label}>Password</Text><PasswordInput autoCapitalize="none" autoComplete="new-password" maxLength={128} value={password} onChangeText={setPassword} /></View>
+        <Text style={authStyles.help}>8 to 128 characters with a letter, number, and special character.</Text>
         <View><Text style={authStyles.label}>Confirm password</Text><PasswordInput autoCapitalize="none" autoComplete="new-password" value={passwordConfirmation} onChangeText={setPasswordConfirmation} /></View>
         {error ? <Text accessibilityRole="alert" style={authStyles.error}>{error}</Text> : null}
         <Pressable disabled={submitting || !email.trim() || !householdName.trim() || !password || !passwordConfirmation} style={[authStyles.button, submitting && authStyles.buttonDisabled]} onPress={() => void submit()}>

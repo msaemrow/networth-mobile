@@ -21,6 +21,7 @@ const request = async <T>(path: string, options: RequestInit = {}): Promise<T> =
       ...options,
       headers: {
         'Content-Type': 'application/json',
+        'X-Auth-Client': 'mobile',
         ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
         ...options.headers,
       },

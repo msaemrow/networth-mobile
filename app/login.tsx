@@ -6,7 +6,7 @@ import { PasswordInput } from '@/src/components/ui/PasswordInput';
 import { useAuth } from '@/src/auth/AuthContext';
 
 export default function LoginScreen() {
-  const { login } = useAuth();
+  const { login, registrationEnabled } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -30,7 +30,7 @@ export default function LoginScreen() {
           <Text style={authStyles.buttonText}>{submitting ? 'Logging in…' : 'Log in'}</Text>
         </Pressable>
       </View>
-      <Text style={authStyles.footer}>New here? <Link href={'/register' as Href} style={authStyles.link}>Create an account</Link>.</Text>
+      {registrationEnabled ? <Text style={authStyles.footer}>New here? <Link href={'/register' as Href} style={authStyles.link}>Create an account</Link>.</Text> : null}
     </AuthScreen>
   );
 }

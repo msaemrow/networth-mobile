@@ -8,7 +8,7 @@ export default function RootLayout() {
 }
 
 function AuthenticatedStack() {
-  const { account, isLoading } = useAuth();
+  const { account, isLoading, registrationEnabled } = useAuth();
   if (isLoading) return <View style={styles.loading}><ActivityIndicator size="large" color="#28735b" /><StatusBar style="dark" /></View>;
 
   return (
@@ -26,7 +26,9 @@ function AuthenticatedStack() {
         </Stack.Protected>
         <Stack.Protected guard={!account}>
           <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="register" options={{ headerShown: false }} />
+          <Stack.Protected guard={registrationEnabled}>
+            <Stack.Screen name="register" options={{ headerShown: false }} />
+          </Stack.Protected>
         </Stack.Protected>
       </Stack>
       <StatusBar style="dark" />

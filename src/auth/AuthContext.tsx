@@ -1,13 +1,14 @@
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { api } from '@/src/services/api';
 import { tokenStorage } from '@/src/services/tokenStorage';
-import type { AuthAccount, AuthHousehold, AuthSession } from '@/src/types/api';
+import type { AuthAccount, AuthConfig, AuthHousehold, AuthSession } from '@/src/types/api';
 
 type LoginDetails = { email: string; password: string };
 type RegisterDetails = LoginDetails & { householdName: string; passwordConfirmation: string };
 type AuthValue = {
   account: AuthAccount | null;
   household: AuthHousehold | null;
+  registrationEnabled: boolean;
   isLoading: boolean;
   login: (details: LoginDetails) => Promise<void>;
   register: (details: RegisterDetails) => Promise<void>;
@@ -19,6 +20,7 @@ const AuthContext = createContext<AuthValue | null>(null);
 export function AuthProvider({ children }: PropsWithChildren) {
   const [account, setAccount] = useState<AuthAccount | null>(null);
   const [household, setHousehold] = useState<AuthHousehold | null>(null);
+  const [registrationEnabled, setRegistrationEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const clear = useCallback(async () => {
@@ -41,6 +43,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
     api.onUnauthorized(() => { void clear(); });
     const restore = async () => {
       try {
+        const config = await api.get<AuthConfig>('/auth/config');
+        setRegistrationEnabled(config.registrationEnabled);
+      } catch {
+        setRegistrationEnabled(false);
+      }
+      try {
         const token = await tokenStorage.get();
         if (!token) return;
         api.setAuthToken(token);
@@ -58,11 +66,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const value = useMemo<AuthValue>(() => ({
     account,
     household,
+    registrationEnabled,
     isLoading,
     login: async (details) => apply(await api.post<AuthSession>('/auth/login', details)),
     register: async (details) => apply(await api.post<AuthSession>('/auth/register', details)),
-    logout: clear,
-  }), [account, household, isLoading, apply, clear]);
+    logout: async () => {
+      try { await api.post<null>('/auth/logout', {}); }
+      finally { await clear(); }
+    },
+  }), [account, household, registrationEnabled, isLoading, apply, clear]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

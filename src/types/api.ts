@@ -18,3 +18,4 @@ export interface RetirementSummary { currentBalance: number; annualContribution:
 export interface AuthAccount { id: number; email: string }
 export interface AuthHousehold { id: number; name: string; showHouseFund: boolean }
 export interface AuthSession { token?: string; account: AuthAccount; household: AuthHousehold }
+export interface AuthConfig { registrationEnabled: boolean }
