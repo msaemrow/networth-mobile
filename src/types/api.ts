@@ -4,7 +4,9 @@ export interface Account { id: number; name: string; status: string; balanceClas
 export interface AccountBalance { id: number; accountId: number; balanceDate: string; amount: number | string }
 export interface SavingsSummary {
   annualIncome: number; totalContribution: number; totalSavingsRate: number;
-  retirementContribution: number; retirementSavingsRate: number; contributionBreakdown: unknown[];
+  totalSaved?: number; totalEmployerMatch?: number; totalSavedRate?: number;
+  retirementContribution: number; retirementSavingsRate: number;
+  retirementSaved?: number; retirementSavedRate?: number; contributionBreakdown: unknown[];
 }
 interface HouseFundBalance { amount: number; balanceDate: string }
 interface HouseFundComponent { accountId: number; accountName: string; balance: HouseFundBalance | null }

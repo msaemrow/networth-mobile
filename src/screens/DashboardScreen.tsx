@@ -38,6 +38,8 @@ export function DashboardScreen() {
       : hidden
         ? "••••••"
         : currency.format(value);
+  const percent = (value: number | null | undefined) =>
+    `${Number(value || 0).toFixed(1)}%`;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -119,19 +121,15 @@ export function DashboardScreen() {
               <View style={styles.column}>
                 <Metric
                   label="Retirement savings rate"
-                  value={`${Number(data.savings.retirementSavingsRate || 0).toFixed(1)}%`}
-                  description={money(
-                    Number(data.savings.retirementContribution || 0),
-                  )}
+                  value={percent(data.savings.retirementSavingsRate)}
+                  description={`${percent(data.savings.retirementSavedRate ?? data.savings.retirementSavingsRate)} including employer match.`}
                 />
               </View>
               <View style={styles.column}>
                 <Metric
                   label="Total savings rate"
-                  value={`${Number(data.savings.totalSavingsRate || 0).toFixed(1)}%`}
-                  description={money(
-                    Number(data.savings.totalContribution || 0),
-                  )}
+                  value={percent(data.savings.totalSavingsRate)}
+                  description={`${percent(data.savings.totalSavedRate ?? data.savings.totalSavingsRate)} including employer match.`}
                 />
               </View>
             </View>
